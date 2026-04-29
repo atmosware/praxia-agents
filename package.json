@@ -1,0 +1,36 @@
+{
+  "name": "praxia",
+  "version": "1.0.0",
+  "description": "Praxia consists of multiple agents (architecture, system design, developer, and more) to refactor and optimize existing projects comprehensively.",
+  "type": "module",
+  "bin": {
+    "praxia": "bin/install.js"
+  },
+  "scripts": {
+    "postinstall": "node bin/install.js",
+    "uninstall": "node bin/install.js --uninstall",
+    "sync:wrappers": "node scripts/sync-wrappers.js",
+    "check:wrappers": "node scripts/sync-wrappers.js --check"
+  },
+  "keywords": [
+    "ai",
+    "agents",
+    "copilot",
+    "developer-assistant",
+    "optimization",
+    "refactoring",
+    "bug fixing",
+    "architecture",
+    "praxia"
+  ],
+  "license": "MIT",
+  "files": [
+    "AGENTS.md",
+    "README.md",
+    "bin/",
+    "scripts/",
+    ".github/agents",
+    ".github/skills",
+    ".claude/agents"
+  ]
+}

@@ -1,0 +1,12 @@
+# Exclude editor/IDE config (but keep agents for install)
+.claude/settings.json
+.claude/settings.local.json
+.claude/CLAUDE.md
+
+# Exclude git internals
+.git/
+.gitignore
+.gitattributes
+
+# Exclude CI/CD configs (not needed by consumers)
+.github/workflows/
