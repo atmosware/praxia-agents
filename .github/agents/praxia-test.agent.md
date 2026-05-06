@@ -22,6 +22,7 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-test
 2. Read the source files that need testing (cited in the report) to understand the implementation.
 3. Read existing test files to match the project's testing conventions, patterns, and style.
 4. Do not re-run the full test audit — build on the cognia report.
+5. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -30,9 +31,9 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-test
 This agent proposes test additions and STOPS until the human approves.
 
 ### Phase 1 — Propose (present and STOP)
-1. List every proposed test file or test block as a numbered item.
-2. For each: the source file being covered, the test file that will be created or extended, and the specific test cases that will be written.
-3. Show the test case titles (describe/it/test names) without implementing them, so the human can review scope.
+1. List every proposed test file or test block as a numbered item using the **Shared Change Proposal Schema** defined in `AGENTS.md`.
+2. For each: the source file being covered, the test file that will be created or extended, and the specific test case titles (describe/it/test names) without implementing them.
+3. Map the `Change` field to the test cases being written; map `Validation` to how the tests will be confirmed to pass.
 4. **STOP. Write zero test code until the human explicitly approves.**
 
 ### Phase 2 — Execute (only approved items)
@@ -47,6 +48,7 @@ This agent proposes test additions and STOPS until the human approves.
 | "approve all" / "proceed" | Write all proposed tests |
 | "approve 1, 3, 5" | Write only the listed test blocks |
 | "reject N" / "skip N" | Record as suggestion stub; do not write |
+| "reject all" / "none" | Write suggestions report; do not write any test file |
 | Silence or ambiguity | Ask for explicit confirmation before writing any test |
 
 ---
@@ -179,7 +181,8 @@ All written tests must:
 
 > **Status**: [N test files written / Suggestions only]
 > **Source report**: `cognia/[project_name]-test-analysis.md`
-> **Approval received**: [Yes — [date]]
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Approval Summary
 | # | Proposed Test Block | Platform | Decision | Test File |

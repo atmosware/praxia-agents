@@ -21,6 +21,7 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-po r
 1. Read `cognia/{project_name}-po-analysis.md` — the cognia-po report.
 2. Optionally read `cognia/{project_name}-reverse-analysis.md` if available — for business domain context.
 3. Do not re-run a full audit — trust and build on the cognia report.
+4. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -34,9 +35,9 @@ This agent presents a proposal and STOPS until the human approves.
 3. Flag any item where business intent is ambiguous and a product decision is needed.
 4. **STOP. Do not write the output file until the human explicitly approves the proposal or requests modifications.**
 
-### Phase 2 — Finalise (only after approval)
-- Incorporate any modifications the human requests.
-- Write the final suggestions report.
+### Phase 2 — Finalise (after approval or rejection)
+- On approval: incorporate any requested modifications, then write the final suggestions report.
+- On full rejection: write the suggestions report noting that the proposal was not accepted and recording the human's stated reasons or direction for a future attempt.
 
 ### Approval signals
 | Signal | Action |
@@ -44,6 +45,7 @@ This agent presents a proposal and STOPS until the human approves.
 | "approve" / "looks good" / "proceed" | Write the final report as presented |
 | "approve with changes: [details]" | Incorporate changes, then write |
 | "remove story N" / "reprioritise X" | Revise backlog, re-present before writing |
+| "reject all" / "cancel" | Write suggestions report noting the proposal was not accepted |
 | Silence or ambiguity | Ask for explicit confirmation before writing |
 
 ---
@@ -114,7 +116,7 @@ Requirements surfaced from cognia-po findings that are not captured as user stor
 **Writing the output file is mandatory. The report is not complete until the file is created.**
 
 - Always: `praxia/{project_name}-praxia-po-suggestions.md`
-- Use `create_file` to write; always overwrite, never append.
+- Write or overwrite the output file using the available file-writing mechanism. Ensure the parent directory exists. Do not append.
 - Do NOT return the report in chat as a substitute for writing the file.
 
 ---
@@ -126,7 +128,8 @@ Requirements surfaced from cognia-po findings that are not captured as user stor
 
 > **Status**: Suggestions only — no source files were modified.
 > **Source report**: `cognia/[project_name]-po-analysis.md`
-> **Approval received**: [Yes — [date] / Pending]
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Top Gaps Addressed
 | # | Gap | Priority | Addressed By (Epic) |

@@ -19,8 +19,9 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-reve
 ## Input Source
 
 1. Read `cognia/{project_name}-reverse-analysis.md` — the cognia-reverse report.
-2. Optionally read `cognia/{project_name}-po-analysis.md` and `cognia/{project_name}-arch-analysis.md` if available — for cross-referencing.
+2. Optionally read `cognia/{project_name}-po-analysis.md` and `cognia/{project_name}-architecture.md` if available — for cross-referencing.
 3. Do not re-run a full audit — trust and build on the cognia report.
+4. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -34,9 +35,9 @@ This agent presents a proposal and STOPS until the human approves.
 3. Flag any areas where cognia-reverse found ambiguity — these need human input before they can be documented accurately.
 4. **STOP. Do not write the output file until the human explicitly approves the artefact list or requests modifications.**
 
-### Phase 2 — Finalise (only after approval)
-- Incorporate any clarifications or modifications the human provides.
-- Write the final suggestions report containing all approved artefacts.
+### Phase 2 — Finalise (after approval or rejection)
+- On approval: incorporate any clarifications or modifications the human provides, then write the final suggestions report containing all approved artefacts.
+- On full rejection: write the suggestions report noting that the proposal was not accepted and recording the human's stated reasons or direction for a future attempt.
 
 ### Approval signals
 | Signal | Action |
@@ -44,6 +45,7 @@ This agent presents a proposal and STOPS until the human approves.
 | "approve" / "looks good" / "proceed" | Write the final report as presented |
 | "approve with changes: [details]" | Incorporate changes, then write |
 | "skip section N" / "add X" | Adjust artefact list, re-present before writing |
+| "reject all" / "cancel" | Write suggestions report noting the proposal was not accepted |
 | Silence or ambiguity | Ask for explicit confirmation before writing |
 
 ---
@@ -109,7 +111,7 @@ For each workflow identified in cognia-reverse:
 **Writing the output file is mandatory. The report is not complete until the file is created.**
 
 - Always: `praxia/{project_name}-praxia-reverse-suggestions.md`
-- Use `create_file` to write; always overwrite, never append.
+- Write or overwrite the output file using the available file-writing mechanism. Ensure the parent directory exists. Do not append.
 - Do NOT return the report in chat as a substitute for writing the file.
 
 ---
@@ -121,7 +123,8 @@ For each workflow identified in cognia-reverse:
 
 > **Status**: Suggestions only — no source files were modified.
 > **Source report**: `cognia/[project_name]-reverse-analysis.md`
-> **Approval received**: [Yes — [date] / Pending]
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ---
 

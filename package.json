@@ -1,7 +1,7 @@
 {
   "name": "praxia",
   "version": "1.0.0",
-  "description": "Praxia consists of multiple agents (architecture, system design, developer, and more) to refactor and optimize existing projects comprehensively.",
+  "description": "Praxia is the action layer for Cognia reports. It reads analysis from cognia/, then proposes and, after explicit approval, applies scoped fixes or writes suggestions to praxia/.",
   "type": "module",
   "bin": {
     "praxia": "bin/install.js"
@@ -10,7 +10,8 @@
     "postinstall": "node bin/install.js",
     "uninstall": "node bin/install.js --uninstall",
     "sync:wrappers": "node scripts/sync-wrappers.js",
-    "check:wrappers": "node scripts/sync-wrappers.js --check"
+    "check:wrappers": "node scripts/sync-wrappers.js --check",
+    "check:docs": "node scripts/check-docs.js"
   },
   "keywords": [
     "ai",
@@ -31,6 +32,9 @@
     "scripts/",
     ".github/agents",
     ".github/skills",
-    ".claude/agents"
+    ".github/roster.json",
+    ".claude/agents",
+    ".claude/skills",
+    ".codex/skills"
   ]
 }

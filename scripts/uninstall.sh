@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# uninstall.sh — Remove Cognia agents and skills
+# uninstall.sh — Remove Praxia agents and skills
 # Usage: bash scripts/uninstall.sh [--global | --local] [--claude] [--codex] [--all]
 
 # This script delegates to bin/install.js so uninstall behaviour stays aligned

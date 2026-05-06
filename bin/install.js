@@ -21,20 +21,10 @@ const PKG_VERSION  = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, 'package
 // can clean old package-owned definitions after the canonical location moves.
 const LEGACY_GLOBAL_INSTALL_DIRNAME = 'praxia';
 
-const AGENTS = [
-  'praxia-android',
-  'praxia-arch',
-  'praxia-backend',
-  'praxia-frontend',
-  'praxia-ios',
-  'praxia-perf',
-  'praxia-po',
-  'praxia-reverse',
-  'praxia-sec',
-  'praxia-tech',
-  'praxia-test',
-  'praxia-ux',
-];
+const AGENTS = JSON.parse(fs.readFileSync(path.join(PACKAGE_ROOT, '.github', 'roster.json'), 'utf8'))
+  .skills
+  .filter(entry => entry.installer && entry.status === 'active')
+  .map(entry => entry.name);
 
 const args = process.argv.slice(2);
 const isUninstall = args.includes('--uninstall');
@@ -271,7 +261,7 @@ function install(scope, selectedRuntimes) {
 
       console.log('');
       console.log(`  Codex CLI → ${codexBase}`);
-      console.log('  Usage: $legacy-analysis');
+      console.log('  Usage: $praxia-backend  or  $praxia-sec');
     }
 
     console.log('');

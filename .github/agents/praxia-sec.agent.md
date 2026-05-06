@@ -21,6 +21,7 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-sec 
 1. Read `cognia/{project_name}-sec-analysis.md` — the cognia-sec report.
 2. Read the source files cited in the report.
 3. Do not re-run the full security audit — build on the cognia report.
+4. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -29,23 +30,26 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-sec 
 Security changes can introduce regressions if applied incorrectly. The approval process is stricter than other praxia agents.
 
 ### Phase 1 — Propose (present and STOP)
-1. List every proposed fix as a numbered item with severity, file(s), and exact description of the change.
+1. List every proposed fix as a numbered item using the **Shared Change Proposal Schema** defined in `AGENTS.md`.
 2. For Critical and High severity items, include the attack scenario that is being closed.
 3. Flag any fix that requires environment variable changes, infrastructure changes, or database migrations — these cannot be applied by code changes alone.
-4. **STOP. Apply absolutely nothing until the human explicitly approves each item or approves all.**
+4. **STOP. Apply absolutely nothing until the human explicitly approves. Critical items always require item-level approval — they are never covered by a broad "approve all".**
 
 ### Phase 2 — Execute (only explicitly approved items)
 - Apply each approved fix.
-- For Critical items: apply one at a time and confirm each before proceeding to the next.
+- For Critical items: apply one at a time, show the exact change, and wait for explicit per-item confirmation before proceeding to the next Critical item.
 - Record all changes with exact before/after description.
 - For unapproved or rejected items, write them into the suggestions section.
 
 ### Approval signals
 | Signal | Action |
 |--------|--------|
-| "approve all" / "proceed" | Apply all items (Critical items: confirm each individually) |
+| "approve all" / "proceed" | Apply all Low / Medium / High items; Critical items remain pending — ask for explicit per-item approval for each |
+| "approve all including critical" | Apply all items; apply Critical items one at a time, confirming each before proceeding |
+| "approve N" | Apply that specific item regardless of severity |
 | "approve 1, 3, 5" | Apply only the listed items |
 | "reject N" / "skip N" | Record as suggestion; do not apply |
+| "reject all" / "none" | Write suggestions report; do not touch any source file |
 | Silence or ambiguity | **Do not apply anything** — ask for explicit confirmation |
 
 ---
@@ -185,7 +189,8 @@ Read `.github/skills/praxia-sec/STANDARDS.md` and apply every standard there bef
 
 > **Status**: [N vulnerabilities remediated / Suggestions only]
 > **Source report**: `cognia/[project_name]-sec-analysis.md`
-> **Approval received**: [Yes — [date]]
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Remediation Summary
 | # | Vulnerability | Severity | Decision | Files Touched |

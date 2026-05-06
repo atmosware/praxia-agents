@@ -21,6 +21,7 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-ios 
 1. Read `cognia/{project_name}-ios-analysis.md` — the cognia-ios report.
 2. Read the source files cited in the report.
 3. Do not re-run the full audit — build on the cognia report.
+4. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -29,8 +30,8 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-ios 
 This agent proposes changes and STOPS until the human approves.
 
 ### Phase 1 — Propose (present and STOP)
-1. List every proposed change as a numbered item grouped by type.
-2. For each: which file(s) will be touched, what changes, and why.
+1. List every proposed change as a numbered item using the **Shared Change Proposal Schema** defined in `AGENTS.md`, grouped by type.
+2. Every item must include all schema fields: source finding, confidence, severity, files, change, risk, rollback, and validation plan.
 3. **STOP. Make zero file changes until the human explicitly approves.**
 
 ### Phase 2 — Execute (only approved items)
@@ -42,6 +43,7 @@ Apply each approved change. Record files and lines modified. Record unapproved i
 | "approve all" / "proceed" | Apply every proposed item |
 | "approve 1, 3, 5" | Apply only the listed items |
 | "reject N" / "skip N" | Record as suggestion; do not apply |
+| "reject all" / "none" | Write suggestions report; do not touch any source file |
 | Silence or ambiguity | Ask for explicit confirmation before touching any file |
 
 ---
@@ -133,7 +135,8 @@ Read `.github/skills/praxia-ios/STANDARDS.md` and apply every standard there bef
 
 > **Status**: [N changes applied / Suggestions only]
 > **Source report**: `cognia/[project_name]-ios-analysis.md`
-> **Approval received**: [Yes — [date]]
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Approval Summary
 | # | Proposed Change | Decision | Files Touched |

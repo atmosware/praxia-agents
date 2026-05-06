@@ -37,15 +37,25 @@ This two-step model keeps humans in the loop while eliminating the manual effort
 ## How It Works
 
 ```
-cognia-<domain>  →  produces  →  cognia/<project>-<domain>-report.md
+cognia-<domain>  →  produces  →  cognia/<project>-<domain>-analysis.md
                                           ↓
 praxia-<domain>  →  reads report, proposes changes
                                           ↓
                           human approves / rejects
                                           ↓
-             cognia/<project>-<domain>-applied.md   (changes made)
-             cognia/<project>-<domain>-suggestions.md  (no changes)
+             praxia/<project>-praxia-<domain>-applied.md     (changes made)
+             praxia/<project>-praxia-<domain>-suggestions.md  (no changes)
 ```
+
+> **Note — three domains use non-standard Cognia report names:**
+>
+> | Praxia Agent | Cognia report file |
+> |---|---|
+> | `praxia-arch` | `cognia/<project>-architecture.md` (+ `architecture.html`) |
+> | `praxia-tech` | `cognia/<project>-technical-analysis.md` |
+> | `praxia-ux` | `cognia/<project>-ui-ux-analysis.md` |
+>
+> All other agents follow the `cognia/<project>-<domain>-analysis.md` pattern. See the full map in [`AGENTS.md`](AGENTS.md#cognia-input--praxia-agent-map).
 
 ---
 
@@ -61,7 +71,7 @@ npm install -g cognia
 npm install -g praxia
 ```
 
-> **Why both?** Cognia scans your codebase and writes a structured report to `cognia/<project>-<domain>-report.md`. Praxia reads that report to know exactly what to fix. Without a Cognia report, Praxia has nothing to act on.
+> **Why both?** Cognia scans your codebase and writes a structured report to `cognia/<project>-<domain>-analysis.md`. Praxia reads that report to know exactly what to fix. Without a Cognia report, Praxia has nothing to act on.
 
 See the [Cognia README](https://github.com/atesibrahim/cognia-agents) for full usage instructions for the audit agents.
 
@@ -149,8 +159,8 @@ Each agent will:
 
 | Outcome | File written |
 |---------|-------------|
-| Changes were applied | `cognia/{project}-{agent}-applied.md` |
-| Suggestions only (no code changed) | `cognia/{project}-{agent}-suggestions.md` |
+| Changes were applied | `praxia/{project}-praxia-{agent}-applied.md` |
+| Suggestions only (no code changed) | `praxia/{project}-praxia-{agent}-suggestions.md` |
 
 ---
 
@@ -161,7 +171,7 @@ All Praxia agents follow these cross-cutting constraints:
 - **Evidence first** — every finding cites at least one concrete file path.
 - **Confidence tags** — claims are marked `Confirmed` (directly evidenced) or `Inferred` (best-fit interpretation).
 - **No guessing** — missing evidence is reported as `Not found in scanned files`.
-- **Output files are mandatory** — the task is not complete until the output file is written.
+- **Two-phase lifecycle** — every agent run has two phases. **Phase 1 (proposal)**: the agent presents its proposed changes and pauses — no output file is written yet, and no files are modified. This pause is intentional; the agent is waiting for your approval. **Phase 2 (outcome)**: after you respond, the agent writes the output file regardless of the result — approved changes produce an applied report; partial or full rejection produces a suggestions report.
 - **No domain creep** — each agent stays within its own scope; cross-domain observations go into a handoff note.
 
 ---
@@ -170,10 +180,37 @@ All Praxia agents follow these cross-cutting constraints:
 
 ```
 .github/
-  agents/          # *.agent.md — one file per Praxia agent
-  skills/          # Shared skill definitions
-AGENTS.md          # Discovery index (used by OpenAI Codex / Copilot)
+  agents/            # *.agent.md — canonical definition for each Praxia agent
+  skills/            # STANDARDS.md per agent (engineering standards and hard gates)
+  roster.json        # Single source of truth: active agents, input/output paths, install flags
+
+.claude/
+  agents/            # Thin Claude Code agent wrappers (description + canonical reference)
+  skills/            # Claude Code skill wrappers (description + argument-hint)
+
+.codex/
+  skills/            # Codex CLI skill wrappers (description + argument-hint)
+
+bin/
+  install.js         # Installer — derives agent list from roster.json at runtime
+
+scripts/
+  sync-wrappers.js   # Sync description/argument-hint from canonical agents to all wrappers
+  check-docs.js      # Validate AGENTS.md and README.md mention every active roster entry
+  new-skill.sh       # Scaffold a new Praxia agent (files + roster entry snippet)
+  install.sh         # Thin shell wrapper for bin/install.js
+  uninstall.sh       # Thin shell wrapper for bin/install.js --uninstall
+
+AGENTS.md            # Discovery index (OpenAI Codex / Copilot) + cross-agent rules + shared schemas
 package.json
+```
+
+**Key maintenance commands:**
+
+```bash
+npm run sync:wrappers   # propagate description/argument-hint changes to all wrapper files
+npm run check:wrappers  # verify all 36 wrapper files are in sync (use as release gate)
+npm run check:docs      # verify AGENTS.md and README.md cover all active roster entries
 ```
 
 ---
