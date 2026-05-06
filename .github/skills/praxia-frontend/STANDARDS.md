@@ -1,7 +1,10 @@
 # Praxia Frontend — Engineering Standards
 
-> Every fix applied by `praxia-frontend` MUST conform to every standard in this file.
-> A change that violates these standards should be flagged as a suggestion instead of applied.
+> Standards are divided into two tiers:
+> - **Hard Gate** — a change that violates this must be flagged as a suggestion instead of applied. Covers: safety, security, data loss, buildability, and API compatibility.
+> - **Guidance** — apply when reasonable; note the violation in the proposal but do not block the fix. Covers: style preferences, size heuristics, and design patterns.
+>
+> Items marked `[Guidance]` are heuristics. All unmarked items are Hard Gates.
 
 ---
 
@@ -23,7 +26,7 @@
 - Do not DRY up components that are visually similar but evolve independently.
 
 ### KISS
-- A component with fewer than 50 lines is a good component.
+- `[Guidance]` A component with fewer than 50 lines is a good component.
 - Prefer conditional rendering (`{show && <X />}`) over complex state machines for simple visibility cases.
 - Avoid render-prop patterns and HOCs unless the project already uses them; prefer hooks.
 
@@ -107,12 +110,12 @@ Every applied change must not decrease accessibility. Every new interactive elem
 ## 5. Performance Standards
 
 ### Performance Budget (applies to all applied changes)
-- A change must not increase the initial JS bundle by more than 5 KB (gzipped) without justification.
+- `[Guidance]` A change must not increase the initial JS bundle by more than 5 KB (gzipped) without justification.
 - A change must not add a synchronous operation on the main thread > 50ms.
 - Images added or referenced must use optimised formats (WebP/AVIF preferred) with explicit width/height.
 
 ### Rendering Performance
-- Long lists (> 50 items) MUST use a virtualised list component.
+- `[Guidance]` Long lists (> 50 items) should use a virtualised list component.
 - Components that re-render on every keystroke must not perform expensive synchronous calculations inline — debounce or memoize.
 - Avoid layout thrash: do not read layout properties (offsetWidth, getBoundingClientRect) and write DOM properties in the same synchronous block.
 

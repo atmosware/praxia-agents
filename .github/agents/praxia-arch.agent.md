@@ -18,9 +18,11 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-arch
 
 ## Input Source
 
-1. Read `cognia/{project_name}-arch-analysis.md` — the cognia-arch report.
-2. Read key structural source files (entry points, module boundaries, config) to validate the current state described in the report.
-3. Do not re-run a full audit — trust and build on the cognia report.
+1. Read `cognia/{project_name}-architecture.md` — the cognia-arch documentation report.
+2. Optionally read `cognia/{project_name}-architecture.html` — the cognia-arch interactive Mermaid diagrams, if present.
+3. Read key structural source files (entry points, module boundaries, config) to validate the current state described in the report.
+4. Do not re-run a full audit — trust and build on the cognia report.
+5. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -34,9 +36,9 @@ This agent presents a proposal and STOPS until the human approves.
 3. For each major architectural decision, state: what changes, why, and the trade-offs.
 4. **STOP. Do not write the output file until the human explicitly approves the proposal or requests modifications.**
 
-### Phase 2 — Finalise (only after approval)
-- Incorporate any modifications the human requests.
-- Write the final suggestions report.
+### Phase 2 — Finalise (after approval or rejection)
+- On approval: incorporate any requested modifications, then write the final suggestions report.
+- On full rejection: write the suggestions report noting that the proposal was not accepted and recording the human's stated reasons or direction for a future attempt.
 
 ### Approval signals
 | Signal | Action |
@@ -44,6 +46,7 @@ This agent presents a proposal and STOPS until the human approves.
 | "approve" / "looks good" / "proceed" | Write the final report as presented |
 | "approve with changes: [details]" | Incorporate changes, then write |
 | "reject section N" / "remove X" | Remove or revise that section, re-present before writing |
+| "reject all" / "cancel" | Write suggestions report noting the proposal was not accepted |
 | Silence or ambiguity | Ask for explicit confirmation before writing |
 
 ---
@@ -107,7 +110,7 @@ The proposal must address the following dimensions (include only those relevant 
 **Writing the output file is mandatory. The report is not complete until the file is created.**
 
 - Always: `praxia/{project_name}-praxia-arch-suggestions.md`
-- Use `create_file` to write; always overwrite, never append.
+- Write or overwrite the output file using the available file-writing mechanism. Ensure the parent directory exists. Do not append.
 - Do NOT return the report in chat as a substitute for writing the file.
 
 ---
@@ -118,8 +121,9 @@ The proposal must address the following dimensions (include only those relevant 
 # Praxia Architecture Redesign — [Project Name]
 
 > **Status**: Suggestions only — no source files were modified.
-> **Source report**: `cognia/[project_name]-arch-analysis.md`
-> **Approval received**: [Yes — [date] / Pending]
+> **Source report**: `cognia/[project_name]-architecture.md` (+ `architecture.html` if present)
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Key Risks Addressed
 (from cognia-arch findings)

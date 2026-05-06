@@ -18,9 +18,10 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-ux r
 
 ## Input Source
 
-1. Read `cognia/{project_name}-ux-analysis.md` — the cognia-ux report.
+1. Read `cognia/{project_name}-ui-ux-analysis.md` — the cognia-ux report.
 2. Read the source files (components, templates, CSS) cited in the report.
 3. Do not re-run the full UX audit — build on the cognia report.
+4. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -30,7 +31,7 @@ This agent proposes changes and STOPS until the human approves.
 
 ### Phase 1 — Propose (present and STOP)
 1. Separate findings into **Track A** (direct code fixes) and **Track B** (design specifications).
-2. List every Track A change as a numbered item with file and description.
+2. List every Track A change as a numbered item using the **Shared Change Proposal Schema** defined in `AGENTS.md`. Track B items use a summary format (design spec title + scope only).
 3. List every Track B specification with a summary of what the design spec will contain.
 4. **STOP. Make zero file changes until the human explicitly approves.**
 
@@ -46,6 +47,7 @@ This agent proposes changes and STOPS until the human approves.
 | "approve track A only" | Apply Track A; write Track B as suggestions |
 | "approve 1, 3, 5" | Apply only the listed items |
 | "reject N" / "skip N" | Record as suggestion; do not apply |
+| "reject all" / "none" | Write suggestions report; do not touch any source file |
 | Silence or ambiguity | Ask for explicit confirmation before touching any file |
 
 ---
@@ -140,8 +142,9 @@ Track B covers: navigation redesign, user journey improvements, information arch
 # Praxia UX Report — [Project Name]
 
 > **Status**: [N code fixes applied / Design specs produced / Suggestions only]
-> **Source report**: `cognia/[project_name]-ux-analysis.md`
-> **Approval received**: [Yes — [date]]
+> **Source report**: `cognia/[project_name]-ui-ux-analysis.md`
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Approval Summary
 | # | Proposed Change | Track | Decision | Files Touched |

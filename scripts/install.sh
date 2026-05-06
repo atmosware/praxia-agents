@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install.sh — Install Cognia agents and skills
+# install.sh — Install Praxia agents and skills
 # Usage: bash scripts/install.sh [--global | --local] [--claude] [--codex] [--all]
 #
 # This script delegates to bin/install.js, which handles path-patching of

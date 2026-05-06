@@ -1,0 +1,191 @@
+{
+  "skills": [
+    {
+      "name": "praxia-android",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-android.agent.md",
+      "standards_path": ".github/skills/praxia-android/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-android-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-android-applied.md",
+        "praxia/{project_name}-praxia-android-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-arch",
+      "phase": "remediation",
+      "tier": "2",
+      "agent_path": ".github/agents/praxia-arch.agent.md",
+      "inputs": [
+        "cognia/{project_name}-architecture.md",
+        "cognia/{project_name}-architecture.html"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-arch-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-backend",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-backend.agent.md",
+      "standards_path": ".github/skills/praxia-backend/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-backend-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-backend-applied.md",
+        "praxia/{project_name}-praxia-backend-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-frontend",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-frontend.agent.md",
+      "standards_path": ".github/skills/praxia-frontend/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-frontend-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-frontend-applied.md",
+        "praxia/{project_name}-praxia-frontend-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-ios",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-ios.agent.md",
+      "standards_path": ".github/skills/praxia-ios/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-ios-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-ios-applied.md",
+        "praxia/{project_name}-praxia-ios-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-perf",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-perf.agent.md",
+      "standards_path": ".github/skills/praxia-perf/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-perf-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-perf-applied.md",
+        "praxia/{project_name}-praxia-perf-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-po",
+      "phase": "remediation",
+      "tier": "2",
+      "agent_path": ".github/agents/praxia-po.agent.md",
+      "inputs": [
+        "cognia/{project_name}-po-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-po-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-reverse",
+      "phase": "remediation",
+      "tier": "2",
+      "agent_path": ".github/agents/praxia-reverse.agent.md",
+      "inputs": [
+        "cognia/{project_name}-reverse-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-reverse-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-sec",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-sec.agent.md",
+      "standards_path": ".github/skills/praxia-sec/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-sec-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-sec-applied.md",
+        "praxia/{project_name}-praxia-sec-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-tech",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-tech.agent.md",
+      "standards_path": ".github/skills/praxia-tech/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-technical-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-tech-applied.md",
+        "praxia/{project_name}-praxia-tech-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-test",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-test.agent.md",
+      "standards_path": ".github/skills/praxia-test/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-test-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-test-applied.md",
+        "praxia/{project_name}-praxia-test-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    },
+    {
+      "name": "praxia-ux",
+      "phase": "remediation",
+      "tier": "1",
+      "agent_path": ".github/agents/praxia-ux.agent.md",
+      "standards_path": ".github/skills/praxia-ux/STANDARDS.md",
+      "inputs": [
+        "cognia/{project_name}-ui-ux-analysis.md"
+      ],
+      "outputs": [
+        "praxia/{project_name}-praxia-ux-applied.md",
+        "praxia/{project_name}-praxia-ux-suggestions.md"
+      ],
+      "installer": true,
+      "status": "active"
+    }
+  ]
+}

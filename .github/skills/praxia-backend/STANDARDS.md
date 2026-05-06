@@ -1,7 +1,10 @@
 # Praxia Backend — Engineering Standards
 
-> Every fix applied by `praxia-backend` MUST conform to every standard in this file.
-> A change that violates these standards should be flagged as a suggestion instead of applied.
+> Standards are divided into two tiers:
+> - **Hard Gate** — a change that violates this must be flagged as a suggestion instead of applied. Covers: safety, security, data loss, buildability, and API compatibility.
+> - **Guidance** — apply when reasonable; note the violation in the proposal but do not block the fix. Covers: style preferences, size heuristics, and design patterns.
+>
+> Items marked `[Guidance]` are heuristics. All unmarked items are Hard Gates.
 
 ---
 
@@ -150,7 +153,7 @@ Before submitting any change, verify:
 - [ ] No commented-out code
 - [ ] No TODO comments without a ticket reference
 - [ ] Function/method has a single, clear purpose
-- [ ] No function longer than 40 lines without strong justification
-- [ ] No deeply nested conditionals (max 3 levels) — use early returns
+- [ ] `[Guidance]` No function longer than 40 lines without strong justification
+- [ ] `[Guidance]` No deeply nested conditionals (max 3 levels) — use early returns
 - [ ] All new branches and error paths are exercised by existing or new tests
 - [ ] Public API surface is documented (JSDoc/docstring) if the project convention requires it

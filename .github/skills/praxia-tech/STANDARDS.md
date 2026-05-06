@@ -1,7 +1,10 @@
 # Praxia Tech — Engineering Standards
 
-> Every fix applied by `praxia-tech` MUST conform to every standard in this file.
-> A change that violates these standards should be flagged as a suggestion instead of applied.
+> Standards are divided into two tiers:
+> - **Hard Gate** — a change that violates this must be flagged as a suggestion instead of applied. Covers: safety, security, data loss, buildability, and API compatibility.
+> - **Guidance** — apply when reasonable; note the violation in the proposal but do not block the fix. Covers: style preferences, size heuristics, and design patterns.
+>
+> Items marked `[Guidance]` are heuristics. All unmarked items are Hard Gates.
 
 ---
 
@@ -20,7 +23,7 @@ Every change must leave the code more SOLID-compliant than it was:
 ### DRY
 - Eliminate duplication where the duplicated logic has the same reason to change.
 - Do not DRY up coincidentally similar code that belongs to different domains.
-- Extract a shared function/class only when there are ≥ 3 usages that change together.
+- `[Guidance]` Extract a shared function/class only when there are ≥ 3 usages that change together.
 
 ### KISS
 - The simplest correct solution is the best solution.
@@ -64,11 +67,11 @@ Every change must leave the code more SOLID-compliant than it was:
 ## 3. Function / Method Design
 
 ### Size
-- A function should fit on one screen (max ~40 lines). If it does not, look for extraction opportunities.
+- `[Guidance]` A function should fit on one screen (max ~40 lines). If it does not, look for extraction opportunities.
 - One function, one level of abstraction. Do not mix high-level orchestration with low-level implementation details.
 
 ### Parameters
-- Max 4 parameters. More → introduce a parameter object.
+- `[Guidance]` Max 4 parameters. More → introduce a parameter object.
 - Avoid boolean flags as parameters: `send(email, true)` → `sendWithAttachment(email)` or use an options object.
 - Avoid output parameters. Return values instead.
 
@@ -81,7 +84,7 @@ Every change must leave the code more SOLID-compliant than it was:
 ## 4. Code Complexity Standards
 
 ### Cyclomatic Complexity
-- Target ≤ 10 per function/method. Above 15 is a defect — extract sub-functions.
+- `[Guidance]` Target ≤ 10 per function/method. Above 15 is a strong refactor signal — extract sub-functions.
 - Deeply nested code (> 3 levels of `if`/`for`/`try`) is a refactor candidate — use early returns and guard clauses.
 
 ### Early Returns
@@ -153,8 +156,8 @@ Before submitting any change:
 - [ ] No unused imports
 - [ ] No commented-out code
 - [ ] No magic numbers or magic strings — use named constants
-- [ ] All functions ≤ 40 lines
-- [ ] Cyclomatic complexity ≤ 10 per function
+- [ ] `[Guidance]` All functions ≤ 40 lines
+- [ ] `[Guidance]` Cyclomatic complexity ≤ 10 per function
 - [ ] No deeply nested conditionals (> 3 levels)
 - [ ] No TODO comments without a ticket reference
 - [ ] Error handling is explicit — no silent `catch {}`

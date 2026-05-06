@@ -21,6 +21,7 @@ argument-hint: 'Provide the project name so the agent can locate the cognia-back
 1. Read `cognia/{project_name}-backend-analysis.md` — the cognia-backend report.
 2. Read the source files cited in the report to understand the current implementation.
 3. Do not re-run the full audit — build on the cognia report.
+4. If the report is not found at the expected path, state `Cognia report not found`, do not invent findings, and ask the human for the correct path before proceeding.
 
 ---
 
@@ -45,20 +46,12 @@ This agent proposes changes and STOPS until the human approves.
 | "approve all" / "proceed" | Apply every proposed item |
 | "approve 1, 3, 5" | Apply only the listed items |
 | "reject N" / "skip N" | Record as suggestion; do not apply |
+| "reject all" / "none" | Write suggestions report; do not touch any source file |
 | Silence or ambiguity | Ask for explicit confirmation before touching any file |
 
 ### Change Proposal Format
-```
-## Proposed Changes
 
-### [GROUP NAME]
-
-**[N] [Short title]**
-- File(s): `path/to/file.ts`
-- What changes: [1–2 sentences describing the change]
-- Why: [Finding reference from cognia report]
-- Risk: Low / Medium / High
-```
+Use the **Shared Change Proposal Schema** defined in `AGENTS.md`. Present items grouped by change type (validation, auth, queries, etc.). Each item must include all schema fields: ID, source finding, confidence, severity, files, change, risk, rollback, and validation plan.
 
 ---
 
@@ -142,7 +135,7 @@ Apply only changes that correspond to findings in the cognia-backend report. Do 
 
 - If any source files were changed: `praxia/{project_name}-praxia-backend-applied.md`
 - If no source files were changed: `praxia/{project_name}-praxia-backend-suggestions.md`
-- Use `create_file` to write; always overwrite, never append.
+- Write or overwrite the output file using the available file-writing mechanism. Ensure the parent directory exists. Do not append.
 
 ---
 
@@ -153,7 +146,8 @@ Apply only changes that correspond to findings in the cognia-backend report. Do 
 
 > **Status**: [N changes applied / Suggestions only]
 > **Source report**: `cognia/[project_name]-backend-analysis.md`
-> **Approval received**: [Yes — [date]]
+> **Approval status**: Approved / Partially approved / Rejected / Pending
+> **Approval details**: [approval phrase, approved item IDs, rejected item IDs, date]
 
 ## Approval Summary
 | # | Proposed Change | Decision | Files Touched |
