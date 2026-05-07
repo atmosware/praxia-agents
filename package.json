@@ -1,6 +1,6 @@
 {
   "name": "praxia",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Praxia is the action layer for Cognia reports. It reads analysis from cognia/, then proposes and, after explicit approval, applies scoped fixes or writes suggestions to praxia/.",
   "type": "module",
   "bin": {
