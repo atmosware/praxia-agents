@@ -32,8 +32,11 @@ const isGlobal    = args.includes('--global') || args.includes('-g');
 const isLocal     = args.includes('--local')  || args.includes('-l');
 const claudeOnly  = args.includes('--claude');
 const codexOnly   = args.includes('--codex');
-const allRuntime  = args.includes('--all') || (!claudeOnly && !codexOnly);
-const runtimes    = allRuntime ? ['claude', 'codex'] : (claudeOnly ? ['claude'] : ['codex']);
+const cursorOnly  = args.includes('--cursor');
+const allRuntime  = args.includes('--all') || (!claudeOnly && !codexOnly && !cursorOnly);
+const runtimes    = allRuntime
+  ? ['claude', 'codex', 'cursor']
+  : [...(claudeOnly ? ['claude'] : []), ...(codexOnly ? ['codex'] : []), ...(cursorOnly ? ['cursor'] : [])];
 
 // ── helpers ──────────────────────────────────────────────────────────────────
 
@@ -133,6 +136,34 @@ function copyWithPatchedPaths(src, dest, skillsInstallDir, agentsInstallDir) {
   fs.writeFileSync(dest, content, 'utf8');
 }
 
+function stripFrontmatter(content) {
+  return content.replace(/^---\n[\s\S]*?\n---\n?/, '');
+}
+
+function extractFrontmatter(content) {
+  const m = content.match(/^(---\n[\s\S]*?\n---)\n?/);
+  return m ? m[1] : '';
+}
+
+/**
+ * Build a self-contained Cursor agent or rule file by combining:
+ * - frontmatter from the wrapper .md/.mdc (name, description, globs, alwaysApply)
+ * - body from the canonical .agent.md (full instructions, path-patched)
+ *
+ * Cursor injects the rule/agent file as a static prompt — it does not read
+ * referenced files automatically, so inlining the canonical body is required.
+ */
+function buildCursorFile(wrapperSrc, canonicalAgentSrc, skillsInstallDir, agentsInstallDir) {
+  const frontmatter = extractFrontmatter(fs.readFileSync(wrapperSrc, 'utf8'));
+  const canonicalBody = fs.existsSync(canonicalAgentSrc)
+    ? stripFrontmatter(fs.readFileSync(canonicalAgentSrc, 'utf8'))
+    : '';
+  const combined = frontmatter + '\n' + canonicalBody;
+  return combined
+    .replaceAll('.github/skills/', skillsInstallDir + '/')
+    .replaceAll('.github/agents/', agentsInstallDir + '/');
+}
+
 // ── resolve base dirs ─────────────────────────────────────────────────────────
 
 function resolveCopilotBase(scope) {
@@ -151,18 +182,21 @@ function resolveBases(scope) {
   const codexBase = scope === 'global'
     ? path.join(os.homedir(), '.codex')
     : path.join(process.cwd(), '.codex');
+  const cursorBase = process.env.CURSOR_CONFIG_DIR
+    ? process.env.CURSOR_CONFIG_DIR
+    : scope === 'global' ? path.join(os.homedir(), '.cursor') : path.join(process.cwd(), '.cursor');
   // Full skill and agent files are installed in the Copilot-visible source tree
-  // so Claude and Codex wrappers can reference the same canonical files.
+  // so Claude, Codex, and Cursor wrappers can reference the same canonical files.
   const installBase      = resolveCopilotBase(scope);
   const skillsInstallDir = path.join(installBase, 'skills');
   const agentsInstallDir = path.join(installBase, 'agents');
-  return { claudeBase, codexBase, skillsInstallDir, agentsInstallDir };
+  return { claudeBase, codexBase, cursorBase, skillsInstallDir, agentsInstallDir };
 }
 
 // ── install ───────────────────────────────────────────────────────────────────
 
 function install(scope, selectedRuntimes) {
-  const { claudeBase, codexBase, skillsInstallDir, agentsInstallDir } = resolveBases(scope);
+  const { claudeBase, codexBase, cursorBase, skillsInstallDir, agentsInstallDir } = resolveBases(scope);
 
   console.log('');
   console.log('══════════════════════════════════════════════════════════');
@@ -264,6 +298,38 @@ function install(scope, selectedRuntimes) {
       console.log('  Usage: $praxia-backend  or  $praxia-sec');
     }
 
+    if (runtime === 'cursor') {
+      const ghAgentsSrc = path.join(PACKAGE_ROOT, '.github', 'agents');
+
+      console.log('▶ Installing Cursor agents...');
+      const agentSrc  = path.join(PACKAGE_ROOT, '.cursor', 'agents');
+      const agentDest = path.join(cursorBase, 'agents');
+      fs.mkdirSync(agentDest, { recursive: true });
+      let agentCount = 0;
+      for (const agent of AGENTS) {
+        const src       = path.join(agentSrc, `${agent}.md`);
+        const canonical = path.join(ghAgentsSrc, `${agent}.agent.md`);
+        const dest      = path.join(agentDest, `${agent}.md`);
+        if (fs.existsSync(src)) {
+          fs.writeFileSync(dest, buildCursorFile(src, canonical, skillsInstallDir, agentsInstallDir), 'utf8');
+          console.log(`  ✓ agent : ${agent}`);
+          agentCount++;
+        }
+      }
+
+
+      console.log('');
+      console.log(`  Cursor agents (${agentCount}) → ${agentDest}`);
+      console.log('');
+      console.log('  How it works:');
+      console.log('    Agents appear in Cursor\'s agent picker and can be selected by name.');
+      console.log('    You can also invoke agents explicitly in chat:');
+      console.log('');
+      console.log('    "Use praxia-arch to apply architecture fixes for this project."');
+      console.log('    "Run praxia-sec on the codebase and apply security fixes."');
+      console.log('    "Apply backend fixes with praxia-backend."');
+    }
+
     console.log('');
   }
 
@@ -276,7 +342,7 @@ function install(scope, selectedRuntimes) {
 // ── uninstall ─────────────────────────────────────────────────────────────────
 
 function uninstall(scope, selectedRuntimes) {
-  const { claudeBase, codexBase, skillsInstallDir, agentsInstallDir } = resolveBases(scope);
+  const { claudeBase, codexBase, cursorBase, skillsInstallDir, agentsInstallDir } = resolveBases(scope);
 
   console.log('');
   console.log('══════════════════════════════════════════════════════════');
@@ -308,6 +374,15 @@ function uninstall(scope, selectedRuntimes) {
         if (removeIfExists(p)) console.log(`  ✓ removed skill : ${agent}`);
       }
     }
+
+    if (runtime === 'cursor') {
+      console.log('▶ Removing Cursor agents...');
+      for (const agent of AGENTS) {
+        const p = path.join(cursorBase, 'agents', `${agent}.md`);
+        if (removeIfExists(p)) console.log(`  ✓ removed agent : ${agent}`);
+      }
+    }
+
     console.log('');
   }
 
@@ -328,8 +403,11 @@ async function interactive() {
   const scopeAnswer = await ask(rl, '  Install where?\n  [1] Global — available in all projects (recommended)\n  [2] Local  — current project only\n  > ');
   const scope = scopeAnswer === '2' ? 'local' : 'global';
 
-  const runtimeAnswer = await ask(rl, '\n  Install for which runtimes?\n  [1] All (Claude Code + Codex CLI) (recommended)\n  [2] Claude Code only\n  [3] Codex CLI only\n  > ');
-  const selected = runtimeAnswer === '2' ? ['claude'] : runtimeAnswer === '3' ? ['codex'] : ['claude', 'codex'];
+  const runtimeAnswer = await ask(rl, '\n  Install for which runtimes?\n  [1] All (Claude Code + Codex CLI + Cursor) (recommended)\n  [2] Claude Code only\n  [3] Codex CLI only\n  [4] Cursor only\n  > ');
+  const selected = runtimeAnswer === '2' ? ['claude']
+    : runtimeAnswer === '3' ? ['codex']
+    : runtimeAnswer === '4' ? ['cursor']
+    : ['claude', 'codex', 'cursor'];
 
   rl.close();
   install(scope, selected);
@@ -339,14 +417,14 @@ function ciInstall() {
   console.log('');
   console.log('  Praxia');
   console.log('  Non-interactive environment detected — using defaults: global, all runtimes.');
-  console.log('  Override with: --local, --claude, or --codex flags.');
+  console.log('  Override with: --local, --claude, --codex, or --cursor flags.');
   console.log('');
-  install('global', ['claude', 'codex']);
+  install('global', ['claude', 'codex', 'cursor']);
 }
 
 // ── entry point ───────────────────────────────────────────────────────────────
 
-const hasFlags = isGlobal || isLocal || claudeOnly || codexOnly || args.includes('--all');
+const hasFlags = isGlobal || isLocal || claudeOnly || codexOnly || cursorOnly || args.includes('--all');
 
 if (isUninstall) {
   const scope = isLocal ? 'local' : 'global';

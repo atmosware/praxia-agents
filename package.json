@@ -35,6 +35,8 @@
     ".github/roster.json",
     ".claude/agents",
     ".claude/skills",
-    ".codex/skills"
+    ".codex/skills",
+    ".cursor/agents",
+    ".cursor/agents.json"
   ]
 }

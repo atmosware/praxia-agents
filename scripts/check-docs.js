@@ -86,6 +86,7 @@ const LAYOUT_CHECKS = [
   { token: 'roster.json',  label: 'roster.json in README layout' },
   { token: '.claude/',     label: '.claude/ directory in README layout' },
   { token: '.codex/',      label: '.codex/ directory in README layout' },
+  { token: '.cursor/',     label: '.cursor/ directory in README layout' },
 ];
 
 for (const { token, label } of LAYOUT_CHECKS) {
