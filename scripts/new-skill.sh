@@ -17,6 +17,7 @@
 #   .claude/agents/<name>.md               Claude Code agent wrapper (always)
 #   .claude/skills/<name>/SKILL.md         Claude Code skill wrapper (always)
 #   .codex/skills/<name>/SKILL.md          Codex CLI skill wrapper   (always)
+#   .cursor/agents/<name>.md               Cursor agent wrapper      (always)
 
 set -euo pipefail
 
@@ -62,6 +63,7 @@ STANDARDS_FILE="$ROOT/.github/skills/$AGENT_NAME/STANDARDS.md"
 CLAUDE_AGENT_FILE="$ROOT/.claude/agents/$AGENT_NAME.md"
 CLAUDE_SKILL_DIR="$ROOT/.claude/skills/$AGENT_NAME"
 CODEX_SKILL_DIR="$ROOT/.codex/skills/$AGENT_NAME"
+CURSOR_AGENT_FILE="$ROOT/.cursor/agents/$AGENT_NAME.md"
 
 echo ""
 echo "Scaffolding Praxia agent: $AGENT_NAME"
@@ -69,7 +71,7 @@ echo "  phase=$PHASE  tier=$TIER  suggestions-only=$SUGGESTIONS_ONLY"
 echo "──────────────────────────────────────────────────────"
 
 # Guard: abort if any target file already exists
-GUARDS=("$AGENT_FILE" "$CLAUDE_AGENT_FILE" "$CLAUDE_SKILL_DIR/SKILL.md" "$CODEX_SKILL_DIR/SKILL.md")
+GUARDS=("$AGENT_FILE" "$CLAUDE_AGENT_FILE" "$CLAUDE_SKILL_DIR/SKILL.md" "$CODEX_SKILL_DIR/SKILL.md" "$CURSOR_AGENT_FILE" "$CURSOR_RULE_FILE")
 [[ "$SUGGESTIONS_ONLY" == false ]] && GUARDS+=("$STANDARDS_FILE")
 for f in "${GUARDS[@]}"; do
   if [[ -e "$f" ]]; then
@@ -81,7 +83,8 @@ done
 mkdir -p \
   "$(dirname "$AGENT_FILE")" \
   "$CLAUDE_SKILL_DIR" \
-  "$CODEX_SKILL_DIR"
+  "$CODEX_SKILL_DIR" \
+  "$(dirname "$CURSOR_AGENT_FILE")"
 
 [[ "$SUGGESTIONS_ONLY" == false ]] && mkdir -p "$(dirname "$STANDARDS_FILE")"
 
@@ -302,6 +305,31 @@ CODEX_SKILL_EOF
 
 echo "  created  .codex/skills/$AGENT_NAME/SKILL.md"
 
+# ── 6. .cursor/agents/<name>.md ──────────────────────────────────────────────
+cat > "$CURSOR_AGENT_FILE" << CURSOR_AGENT_EOF
+---
+name: $AGENT_NAME
+description: "TODO: paste the description from .github/agents/$AGENT_NAME.agent.md here."
+---
+
+> **Canonical definition**: Read \`.github/agents/$AGENT_NAME.agent.md\` and follow every instruction defined there exactly. This file exists only to register the agent — all role, responsibilities, constraints, approach, and output format are in the canonical file.
+CURSOR_AGENT_EOF
+
+echo "  created  .cursor/agents/$AGENT_NAME.md"
+
+# ── 7. .cursor/rules/<name>.mdc ──────────────────────────────────────────────
+cat > "$CURSOR_RULE_FILE" << CURSOR_RULE_EOF
+---
+description: "TODO: paste the description from .github/agents/$AGENT_NAME.agent.md here."
+globs:
+alwaysApply: false
+---
+
+> **Canonical definition**: Read \`.github/agents/$AGENT_NAME.agent.md\` and follow every instruction defined there exactly. This file exists only to register the agent — all role, responsibilities, constraints, approach, and output format are in the canonical file.
+CURSOR_RULE_EOF
+
+echo "  created  .cursor/rules/$AGENT_NAME.mdc"
+
 # ── Next steps ────────────────────────────────────────────────────────────────
 echo ""
 echo "✓ Scaffold complete. Next steps:"
@@ -332,7 +360,7 @@ echo '     }'
 echo ""
 echo "  3. Fill in the description and argument-hint TODOs in the wrapper files,"
 echo "     then run: npm run sync:wrappers"
-echo "     This propagates those values across .claude/agents/, .claude/skills/, and .codex/skills/."
+echo "     This propagates those values across .claude/agents/, .claude/skills/, .codex/skills/, .cursor/agents/, and .cursor/rules/."
 echo ""
 echo "  4. Run: npm run check:wrappers   (must exit 0)"
 echo ""

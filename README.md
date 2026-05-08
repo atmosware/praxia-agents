@@ -104,6 +104,7 @@ npx praxia --local
 ```bash
 npx praxia --global --claude    # GitHub Copilot + Claude Code only
 npx praxia --global --codex     # Codex CLI only
+npx praxia --global --cursor    # Cursor only
 npx praxia --global --all       # All runtimes (default)
 ```
 
@@ -125,6 +126,18 @@ cp -r node_modules/praxia/.github/agents .github/agents
 ---
 
 ## Usage
+
+### Cursor
+
+After installing, Cursor's AI picks up the relevant agent rule automatically based on what you ask. You can also invoke agents explicitly:
+
+```
+Use praxia-arch to apply architecture improvements for this project.
+Run praxia-sec on the codebase and apply security fixes.
+Apply backend fixes with praxia-backend.
+```
+
+Each agent rule is stored in `.cursor/rules/` (local) or `~/.cursor/rules/` (global) as a `.mdc` file. Agent definitions are stored in `.cursor/agents/` and appear in Cursor's agent picker.
 
 ### Recommended two-step workflow
 
@@ -190,6 +203,11 @@ All Praxia agents follow these cross-cutting constraints:
 
 .codex/
   skills/            # Codex CLI skill wrappers (description + argument-hint)
+
+.cursor/
+  agents/            # Cursor agent wrappers (description + canonical reference)
+  rules/             # Cursor rule wrappers (.mdc) — auto-loaded by domain match
+  agents.json        # Cursor agent registry (id, name, description, path)
 
 bin/
   install.js         # Installer — derives agent list from roster.json at runtime

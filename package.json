@@ -1,6 +1,6 @@
 {
   "name": "praxia",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Praxia is the action layer for Cognia reports. It reads analysis from cognia/, then proposes and, after explicit approval, applies scoped fixes or writes suggestions to praxia/.",
   "type": "module",
   "bin": {
@@ -35,6 +35,8 @@
     ".github/roster.json",
     ".claude/agents",
     ".claude/skills",
-    ".codex/skills"
+    ".codex/skills",
+    ".cursor/agents",
+    ".cursor/agents.json"
   ]
 }

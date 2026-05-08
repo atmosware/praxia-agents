@@ -1,0 +1,76 @@
+{
+  "agents": [
+    {
+      "id": "praxia-tech",
+      "name": "Praxia Tech",
+      "description": "Use after cognia-tech has produced its report. Proposes and (with human approval) applies concrete fixes to technical quality issues: dead code removal, dependency updates, linting config, anti-pattern corrections, test coverage scaffolding, and code structure improvements — across any detected platform.",
+      "path": "agents/praxia-tech.md"
+    },
+    {
+      "id": "praxia-ux",
+      "name": "Praxia UX",
+      "description": "Use after cognia-ux has produced its report. Proposes and (with human approval) applies concrete UX fixes: accessibility attributes, focus management, semantic HTML, copy corrections, and CSS/layout improvements. For changes requiring visual design decisions, produces detailed design specifications as suggestions.",
+      "path": "agents/praxia-ux.md"
+    },
+    {
+      "id": "praxia-android",
+      "name": "Praxia Android",
+      "description": "Use after cognia-android has produced its report. Proposes and (with human approval) applies concrete fixes to Android issues: Kotlin pattern improvements, Gradle dependency updates, manifest corrections, navigation fixes, Room query improvements, coroutine dispatcher fixes, and Play Store readiness issues.",
+      "path": "agents/praxia-android.md"
+    },
+    {
+      "id": "praxia-backend",
+      "name": "Praxia Backend",
+      "description": "Use after cognia-backend has produced its report. Proposes and (with human approval) applies concrete fixes to backend issues: endpoint improvements, service refactoring, input validation, auth hardening, database query corrections, API contract improvements, error handling standardisation, and config cleanup.",
+      "path": "agents/praxia-backend.md"
+    },
+    {
+      "id": "praxia-frontend",
+      "name": "Praxia Frontend",
+      "description": "Use after cognia-frontend has produced its report. Proposes and (with human approval) applies concrete fixes to frontend issues: component improvements, lazy loading, state management, routing guards, form validation, bundle configuration, accessibility attributes, and performance patterns.",
+      "path": "agents/praxia-frontend.md"
+    },
+    {
+      "id": "praxia-reverse",
+      "name": "Praxia Reverse",
+      "description": "Use after cognia-reverse has produced its report. Transforms reverse-engineering findings into formal, structured documentation — requirements specifications, domain model documents, process flow documents, and gap analysis — presented for human approval before finalising. Never modifies source code; always produces a suggestions report.",
+      "path": "agents/praxia-reverse.md"
+    },
+    {
+      "id": "praxia-po",
+      "name": "Praxia PO",
+      "description": "Use after cognia-po has produced its report. Transforms raw product findings into a refined, actionable product backlog — well-formed user stories with acceptance criteria, prioritised epics, gap-filling feature specifications, and a roadmap recommendation — presented for human approval before finalising. Never modifies source code; always produces a suggestions report.",
+      "path": "agents/praxia-po.md"
+    },
+    {
+      "id": "praxia-test",
+      "name": "Praxia Test",
+      "description": "Use after cognia-test has produced its report. Proposes and (with human approval) writes the missing tests identified in the report: unit tests, integration tests, and e2e test stubs — across any detected platform. Each test file or test case requires explicit approval before it is written.",
+      "path": "agents/praxia-test.md"
+    },
+    {
+      "id": "praxia-sec",
+      "name": "Praxia Security",
+      "description": "Use after cognia-sec has produced its report. Proposes and (with human approval) applies concrete security fixes across detected platforms: parameterised queries, auth hardening, security headers, CORS restriction, secret externalisation, input validation, session configuration, and mobile data storage corrections. Every change requires explicit human approval — security fixes are never applied silently.",
+      "path": "agents/praxia-sec.md"
+    },
+    {
+      "id": "praxia-ios",
+      "name": "Praxia iOS",
+      "description": "Use after cognia-ios has produced its report. Proposes and (with human approval) applies concrete fixes to iOS issues: Swift pattern improvements, navigation refactoring, data persistence corrections, dependency updates, memory management fixes, App Store readiness issues, and missing protocol conformances.",
+      "path": "agents/praxia-ios.md"
+    },
+    {
+      "id": "praxia-arch",
+      "name": "Praxia Architecture",
+      "description": "Use after cognia-arch has produced its report. Proposes a target architecture redesign — new component boundaries, service decomposition, data flow, technology recommendations, and a phased migration path — and presents it for human approval before finalising. Never modifies source code; always produces a suggestions report.",
+      "path": "agents/praxia-arch.md"
+    },
+    {
+      "id": "praxia-perf",
+      "name": "Praxia Performance",
+      "description": "Use after cognia-perf has produced its report. Proposes and (with human approval) applies concrete performance fixes across detected platforms: query optimisation, caching layers, bundle splitting, lazy loading, async parallelism, main-thread unblocking, and image optimisation configuration.",
+      "path": "agents/praxia-perf.md"
+    }
+  ]
+}
